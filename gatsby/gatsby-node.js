@@ -1,4 +1,4 @@
-// import fetch from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 import path from 'path';
 
 async function turnPizzasIntoPages({ graphql, actions }) {
@@ -87,9 +87,9 @@ async function turnSlicemastersIntoPages({ graphql, actions }) {
   // 3. Figure out how many pages there are based on how many slicemasters there are, and how many per page!
   const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
   const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);
-  console.log(
-    `There are ${data.slicemasters.totalCount} total people. And we have ${pageCount} pages with ${pageSize} per page`
-  );
+  // console.log(
+  //   `There are ${data.slicemasters.totalCount} total people. And we have ${pageCount} pages with ${pageSize} per page`
+  // );
   // 4. Loop from 1 to n and create the pages for them
   Array.from({ length: pageCount }).forEach((_, i) => {
     console.log(`Creating page ${i}`);
@@ -106,37 +106,37 @@ async function turnSlicemastersIntoPages({ graphql, actions }) {
   });
 }
 
-// async function turnBeersIntoNodes({
-//   actions,
-//   createNodeId,
-//   createContentDigest,
-// }) {
-//   // Fetch beers from a 3rd part API
-//   const res = await fetch('https://api.sampleapis.com/beers/ale');
-//   const beers = await res.json();
-//   // Loop over beers
-//   for (const beer of beers) {
-//     const nodeMeta = {
-//       id: createNodeId(`beer-${beer.name}`),
-//       parent: null,
-//       children: [],
-//       internal: {
-//         type: 'Beer',
-//         mediaType: 'application/json',
-//         contentDigest: createContentDigest(beer),
-//       },
-//     };
-//     // create Node for the beer
-//     actions.createNode({
-//       ...beer,
-//       ...nodeMeta,
-//     });
-//   }
-// }
+async function turnBeersIntoNodes({
+  actions,
+  createNodeId,
+  createContentDigest,
+}) {
+  // Fetch beers from a 3rd part API
+  const res = await fetch('https://api.sampleapis.com/beers/ale');
+  const beers = await res.json();
+  // Loop over beers
+  for (const beer of beers) {
+    const nodeMeta = {
+      id: createNodeId(`beer-${beer.name}`),
+      parent: null,
+      children: [],
+      internal: {
+        type: 'Beer',
+        mediaType: 'application/json',
+        contentDigest: createContentDigest(beer),
+      },
+    };
+    // create Node for the beer
+    actions.createNode({
+      ...beer,
+      ...nodeMeta,
+    });
+  }
+}
 
-// export async function sourceNodes(params) {
-//   await Promise.all([turnBeersIntoNodes(params)]);
-// }
+export async function sourceNodes(params) {
+  await Promise.all([turnBeersIntoNodes(params)]);
+}
 
 export async function createPages(params) {
   // Create pages dynamically
